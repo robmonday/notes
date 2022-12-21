@@ -15,31 +15,21 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-  
-      noteService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
   useEffect(() => {
     noteService
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes)
       })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
   }, [])
 
   const addNote = (event) => {
@@ -57,6 +47,27 @@ const App = () => {
         setNotes(notes.concat(returnedNote))
         setNewNote('')
       })
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+  
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const handleNoteChange = (event) => {
