@@ -51,13 +51,13 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
+    // console.log('logging in with', username, password)
+
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login({ username, password })
 
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-  
+
       noteService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -69,7 +69,7 @@ const App = () => {
       }, 5000)
     }
   }
-
+  
   const handleNoteChange = (event) => {
     setNewNote(event.target.value)
   }
@@ -99,43 +99,42 @@ const App = () => {
     : notes.filter(note => note.important)
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)} />
-      </div>
-      <div>
-        password
-        <input type="password" value={password} name="Password" onChange={({target}) => setPassword(target.value)} />
-      </div>
-      <button type="submit">login</button>
-    </form>
+      <form onSubmit={handleLogin}>
+        <div>
+          username: &nbsp;
+          <input type="text" value={username} name="Username" onChange={({target}) => setUsername(target.value)} />
+        </div>
+        <div>
+          password: &nbsp;
+          <input type="password" value={password} name="Password" onChange={({target}) => setPassword(target.value)} />
+        </div>
+        <button type="submit">login</button>
+      </form>
   )
 
   const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input
-        value={newNote}
-        onChange={handleNoteChange}
-      />
-      <button type="submit">save</button>
-    </form>
+      <form onSubmit={addNote}>
+        <input
+          value={newNote}
+          onChange={handleNoteChange}
+        />
+        <button type="submit">save</button>
+      </form>
   )
 
   return (
     <div>
       <h1>Notes</h1>
-      
       <Notification message={errorMessage} />
-
-      {user === null ?
-        loginForm() :
+      
+      {user === null ? 
+        loginForm() : 
         <div>
           <p>{user.name} logged-in</p>
           {noteForm()}
         </div>
       }
-
+      
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
@@ -150,6 +149,7 @@ const App = () => {
           />
         )}
       </ul>
+
       <Footer />
     </div>
   )
