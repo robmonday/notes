@@ -67,7 +67,7 @@ const App = () => {
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
-  
+
     noteService
       .update(id, changedNote)
       .then(returnedNote => {
@@ -84,18 +84,18 @@ const App = () => {
       })
   }
 
-  const notesToShow = showAll ? 
-    notes : 
+  const notesToShow = showAll ?
+    notes :
     notes.filter(note => note.important)
 
   const loginForm = () => {
     return (
       <Togglable buttonLabel="log in">
         <LoginForm
-          username={username} 
-          password={password} 
-          handleUsernameChange={({target}) => setUsername(target.value)} 
-          handlePasswordChange={({target}) => setPassword(target.value)}
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={handleLogin}
         />
       </Togglable>
@@ -114,9 +114,9 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      
-      {user === null ? 
-        loginForm() : 
+
+      {user === null ?
+        loginForm() :
         <div>
           <p>{user.name} logged-in</p>
           {noteForm()}
@@ -127,9 +127,9 @@ const App = () => {
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
         </button>
-      </div>   
+      </div>
       <ul>
-        {notesToShow.map(note => 
+        {notesToShow.map(note =>
           <Note
             key={note.id}
             note={note}

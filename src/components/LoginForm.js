@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 
 const LoginForm = ({
-  handleSubmit, 
-  handleUsernameChange, 
-  handlePasswordChange, 
-  username, 
+  handleSubmit,
+  handleUsernameChange,
+  handlePasswordChange,
+  username,
   password
 }) => {
   return (
