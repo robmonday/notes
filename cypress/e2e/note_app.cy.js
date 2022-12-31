@@ -1,6 +1,13 @@
 describe('Note app', function() {
 
   beforeEach(function() {
+    cy.request('POST', 'http://localhost:8080/api/testing/reset')
+    const user = {
+      name: 'Rob Monday',
+      username: 'robmonday',
+      password: 'abc123'
+    }
+    cy.request('POST', 'http://localhost:8080/api/users/', user)
     cy.visit('http://localhost:3000')
   })
 
@@ -26,11 +33,26 @@ describe('Note app', function() {
     })
     
     it('a new note can be created', function() {
-      cy.contains('"add new note').click()
+      cy.contains('add new note').click()
       cy.get('input').type('a new note created by cypress')
       cy.contains('save').click()
       cy.contains('a new note created by cypress')
     })
+
+    describe('and a note exists', function() {
+      beforeEach(function() {
+        cy.contains('new note').click()
+        cy.get('input').type('another note cypress')
+        cy.contains('save').click()
+      })
+
+
+      it('it can be made important', function () {
+        cy.contains('another note cypress').contains('make important').click()
+        cy.contains('another note cypress').contains('make not important')
+      })
+    })
+
   })
 
 })
