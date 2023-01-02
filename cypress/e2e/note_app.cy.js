@@ -16,7 +16,7 @@ describe('Note app', function() {
     cy.contains('Note app, Department of Computer Science, University of Helsinki 2022')
   })
 
-  it('login form can be opened', function() {
+  it('user can login', function() {
     cy.contains('log in').click()
     cy.get('#username').type('robmonday')
     cy.get('#password').type('abc123')
@@ -24,7 +24,7 @@ describe('Note app', function() {
     cy.contains('Rob Monday logged-in')
   })
 
-  it.only('login fails with wrong password', function() {
+  it('login fails with wrong password', function() {
     cy.contains('log in').click()
     cy.get('#username').type('robmonday')
     cy.get('#password').type('wrongpassword')
@@ -39,10 +39,7 @@ describe('Note app', function() {
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.contains('log in').click()
-      cy.get('#username').type('robmonday')
-      cy.get('#password').type('abc123')
-      cy.get('#login-button').click()
+      cy.login({ username: 'robmonday', password: 'abc123' })
     })
     
     it('a new note can be created', function() {
@@ -52,18 +49,19 @@ describe('Note app', function() {
       cy.contains('a new note created by cypress')
     })
 
-    describe('and a note exists', function() {
+    describe('and several notes exist', function() {
       beforeEach(function() {
-        cy.contains('new note').click()
-        cy.get('input').type('another note cypress')
-        cy.contains('save').click()
+        cy.createNote({content: 'first note', important: false})
+        cy.createNote({content: 'second note', important: false})
+        cy.createNote({content: 'third note', important: false})
       })
 
-
-      it('it can be made important', function () {
-        cy.contains('another note cypress').contains('make important').click()
-        cy.contains('another note cypress').contains('make not important')
+      it('one of those can be made important', function () {
+        cy.contains('second note').parent().find('button').as('theButton')  // creating an alias
+        cy.get('@theButton').click()
+        cy.get('@theButton').should('contain', 'make not important')
       })
+
     })
 
   })
