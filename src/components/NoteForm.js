@@ -19,7 +19,7 @@ const NoteForm = ({ createNote }) => {
 
   return (
     <div>
-      <h2>Create a new note</h2>
+      <h4>Create a new note</h4>
 
       <form onSubmit={addNote}>
         <input

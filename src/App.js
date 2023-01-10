@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import Note from './components/Note'
+import Notes from './components/Notes'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NoteForm from './components/NoteForm'
@@ -111,7 +111,7 @@ const App = () => {
   )
 
   return (
-    <div>
+    <div className="container">
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
@@ -121,22 +121,15 @@ const App = () => {
           <p>{user.name} logged-in</p>
           {noteForm()}
         </div>
-      }
-      <br />
+      } <br />
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
         </button>
-      </div>
-      <ul>
-        {notesToShow.map(note =>
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        )}
-      </ul>
+      </div><br />
+
+      <Notes notes={notesToShow} toggleImportanceOf={toggleImportanceOf} />
 
       <Footer />
     </div>
