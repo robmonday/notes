@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { Navbar, Nav } from 'react-bootstrap'
+import { Routes, Route, Link } from 'react-router-dom'
 
 import Notes from './components/Notes'
 import Notification from './components/Notification'
@@ -6,6 +8,7 @@ import Togglable from './components/Togglable'
 import NoteForm from './components/NoteForm'
 import LoginForm from './components/LoginForm'
 import Footer from './components/Footer'
+import Users from './components/Users'
 
 import noteService from './services/notes'
 import loginService from './services/login'
@@ -49,6 +52,10 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password })
+      setErrorMessage(`Welcome, ${user.username}!`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
 
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
 
@@ -110,26 +117,45 @@ const App = () => {
     </Togglable>
   )
 
+  const padding = {
+    padding: '1em'
+  }
+
   return (
     <div className="container">
-      <h1>Notes</h1>
+
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/">home</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/notes">notes</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link style={padding} to="/users">users</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              {user
+                ? <em style={padding}>{user.username} logged in</em>
+                : <Link style={padding} to="/login">login</Link>
+              }
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
       <Notification message={errorMessage} />
 
-      {user === null ?
-        loginForm() :
-        <div>
-          <p>{user.name} logged-in</p>
-          {noteForm()}
-        </div>
-      } <br />
+      <Routes>
+        {/* More work would be needed here if this was a real project */}
+        <Route path="/" element={<Notes notes={notesToShow} toggleImportanceOf={toggleImportanceOf} showAll={showAll} setShowAll={setShowAll} user={user} loginForm={loginForm} noteForm={noteForm} />} />
+        <Route path="/notes" element={<Notes notes={notesToShow} toggleImportanceOf={toggleImportanceOf} showAll={showAll} setShowAll={setShowAll} user={user} loginForm={loginForm} noteForm={noteForm} />} />
+        <Route path="/users" element={<Users />} />
+      </Routes>
 
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
-        </button>
-      </div><br />
-
-      <Notes notes={notesToShow} toggleImportanceOf={toggleImportanceOf} />
 
       <Footer />
     </div>

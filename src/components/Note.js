@@ -4,10 +4,8 @@ const Note = ({ note, toggleImportance }) => {
 
   return (
     <tr className='note'>
-      <td>
-        <span>{note.content}</span>
-        <button onClick={toggleImportance}>{label}</button>
-      </td>
+      <td>{note.content}</td>
+      <td style={{ textAlign: 'right' }}><button onClick={toggleImportance}>{label}</button></td>
     </tr>
   )
 }
